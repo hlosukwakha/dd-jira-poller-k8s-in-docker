@@ -1,0 +1,27 @@
+datadog:
+  # apiKeyExistingSecret is created by scripts/bootstrap.sh (namespace: datadog)
+  apiKeyExistingSecret: datadog-secret
+
+  # clusterName is set/overridden by scripts/bootstrap.sh via --set datadog.clusterName
+  # site is set/overridden by scripts/bootstrap.sh via --set datadog.site
+
+  # For local clusters like kind/minikube, kubelet TLS verification often needs to be disabled.
+  kubelet:
+    tlsVerify: false
+
+  logs:
+    enabled: true
+    containerCollectAll: true
+
+  # Enable APM over TCP (hostPort 8126) so pods can send traces to the node-local Agent.
+  apm:
+    portEnabled: true
+    socketEnabled: false
+
+  # Enable DogStatsD over UDP (hostPort 8125) so pods can send custom metrics.
+  dogstatsd:
+    useHostPort: true
+    nonLocalTraffic: true
+
+clusterAgent:
+  enabled: true

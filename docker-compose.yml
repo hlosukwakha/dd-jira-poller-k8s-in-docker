@@ -1,0 +1,11 @@
+services:
+  ctl:
+    build:
+      context: .
+      dockerfile: docker/ctl/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - .env

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jira-poller
+  namespace: jira-poller
+  labels:
+    app: jira-poller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jira-poller
+  template:
+    metadata:
+      labels:
+        app: jira-poller
+        tags.datadoghq.com/service: jira-poller
+        tags.datadoghq.com/env: dev
+        tags.datadoghq.com/version: "0.1.0"
+    spec:
+      containers:
+        - name: jira-poller
+          image: jira-poller:0.1.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: jira-poller-config
+          env:
+            - name: JIRA_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: jira-poller-jira
+                  key: JIRA_BASE_URL
+            - name: JIRA_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: jira-poller-jira
+                  key: JIRA_EMAIL
+            - name: JIRA_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: jira-poller-jira
+                  key: JIRA_API_TOKEN
+
+            # Datadog: reach the node-local agent via status.hostIP (hostPorts enabled in datadog/values.yaml)
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: DD_DOGSTATSD_PORT
+              value: "8125"
+            - name: DD_TRACE_AGENT_PORT
+              value: "8126"
+
+            - name: DD_SERVICE
+              value: "jira-poller"
+            - name: DD_ENV
+              value: "dev"
+            - name: DD_VERSION
+              value: "0.1.0"
+
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_TRACE_SAMPLE_RATE
+              value: "1.0"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi

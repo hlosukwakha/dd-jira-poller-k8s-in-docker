@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jira-poller-config
+  namespace: jira-poller
+data:
+  POLL_INTERVAL_SECONDS: "30"
+  # Override via env (.env) if you want.
+  JIRA_JQL: "assignee = currentUser() ORDER BY updated DESC"

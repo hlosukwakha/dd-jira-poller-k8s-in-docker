@@ -114,7 +114,7 @@ All of the above becomes your “dataset” for dashboards, monitors, and troubl
 ### 1) Clone
 
 ```bash
-git clone <YOUR_REPO_URL_HERE>
+git clone https://github.com/hlosukwakha/dd-jira-poller-k8s-in-docker.git
 cd dd-jira-poller-k8s-in-docker
 ```
 

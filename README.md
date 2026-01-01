@@ -49,35 +49,7 @@ The result is a practical reference repo you can use to prove a full telemetry p
 
 ---
 
-## Architecture
 
-```mermaid
-flowchart LR
-  subgraph Host[Your machine]
-    DC[Docker Engine]
-    DD[Datadog Cloud]
-  end
-
-  subgraph Tools[Tooling container (docker-compose service: ctl)]
-    K[kind / kubectl / helm]
-  end
-
-  subgraph Kind[Kind cluster (Kubernetes nodes = Docker containers)]
-    subgraph Node[Single node]
-      A[Datadog Agent (DaemonSet)]
-      P[Python jira-poller (Deployment)]
-    end
-  end
-
-  K -->|creates| Kind
-  P -->|HTTP| Jira[Jira Cloud/Server]
-  P -->|traces (8126)| A
-  P -->|metrics (8125)| A
-  P -->|stdout logs| A
-  A -->|telemetry| DD
-```
-
----
 
 ## Technology stack
 

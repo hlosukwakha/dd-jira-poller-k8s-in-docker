@@ -103,15 +103,22 @@ def main() -> None:
 
             try:
                 data = search_issues(session, base_url, email, api_token, jql)
-                issue_count = int(data.get("total", 0))
+
+                issues = data.get("issues") or []
+                issue_count = data.get("total")
+                if issue_count is None:
+                    issue_count = len(issues)
+                else:
+                    issue_count = int(issue_count)
+
                 ok = True
 
-                issues = data.get("issues", [])[:3]
+                sample = issues[:3]
                 LOG.info(
                     "jira_search_ok",
                     extra={
                         "issue_count": issue_count,
-                        "sample_keys": [i.get("key") for i in issues],
+                        "sample_keys": [i.get("key") for i in sample],
                     },
                 )
             except Exception as e:
